@@ -812,8 +812,28 @@
       const cRect = noCarrier.getBoundingClientRect();
       const cx = cRect.left+cRect.width/2, cy = cRect.top+cRect.height/2;
       const distNo = getDist(mouseX,mouseY,cx,cy);
-      const panicR=360, extremeR=160;
+      
+      // Increased speech detection radius so dialogue appears from further away
+      const speechR = 560, panicR = 380, extremeR = 170;
 
+      // Handle speech trigger across the wider range
+      if (distNo < speechR) {
+        const speechCooldown = distNo < extremeR ? 1300 : (distNo < panicR ? 1800 : 2300);
+        if (performance.now() - speechTimer > speechCooldown) {
+          noSpeech.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+          noSpeech.classList.add('show'); 
+          speechTimer = performance.now();
+          setTimeout(() => noSpeech.classList.remove('show'), 1600);
+          
+          if (distNo < extremeR) {
+            nearMisses++; 
+            missCountEl.textContent = nearMisses; 
+            catchCounter.classList.add('show');
+          }
+        }
+      }
+
+      // Handle running & animation state
       if (distNo < panicR) {
         const intensity = 1 - distNo/panicR;
         noMouth.setAttribute('d', `M 74 108 Q 80 ${108-intensity*18} 86 108`);
@@ -821,17 +841,6 @@
         const ang = Math.atan2(cy-mouseY, cx-mouseX);
         const force = Math.pow(intensity,1.35)*15;
         velX += Math.cos(ang)*force; velY += Math.sin(ang)*force;
-
-        // Show speech earlier (anywhere in panic range), more often when very close
-        const speechCooldown = distNo < extremeR ? 1400 : 2200;
-        if (performance.now()-speechTimer > speechCooldown) {
-          noSpeech.textContent = phrases[Math.floor(Math.random()*phrases.length)];
-          noSpeech.classList.add('show'); speechTimer = performance.now();
-          setTimeout(()=>noSpeech.classList.remove('show'), 1400);
-          if (distNo < extremeR) {
-            nearMisses++; missCountEl.textContent=nearMisses; catchCounter.classList.add('show');
-          }
-        }
 
         if (distNo < extremeR) {
           noCarrier.classList.add('extreme-panic'); noCarrier.classList.remove('running');
@@ -846,9 +855,10 @@
         noCarrier.classList.remove('running','extreme-panic');
         velX += (baseX-carrierX)*.045; velY += (baseY-carrierY)*.045;
         cursorGlow.style.width='28px'; cursorGlow.style.height='28px';
-        if (distNo>420) {
+        if (distNo > speechR + 50) {
           noMouth.setAttribute('d','M 74 108 Q 80 107 86 108');
-          noTears.setAttribute('opacity','0'); noSpeech.classList.remove('show');
+          noTears.setAttribute('opacity','0'); 
+          noSpeech.classList.remove('show');
         }
       }
       velX*=.86; velY*=.86; carrierX+=velX; carrierY+=velY;
