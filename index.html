@@ -812,7 +812,7 @@
       const cRect = noCarrier.getBoundingClientRect();
       const cx = cRect.left+cRect.width/2, cy = cRect.top+cRect.height/2;
       const distNo = getDist(mouseX,mouseY,cx,cy);
-      const panicR=220, extremeR=100;
+      const panicR=360, extremeR=160;
 
       if (distNo < panicR) {
         const intensity = 1 - distNo/panicR;
@@ -822,16 +822,21 @@
         const force = Math.pow(intensity,1.35)*15;
         velX += Math.cos(ang)*force; velY += Math.sin(ang)*force;
 
+        // Show speech earlier (anywhere in panic range), more often when very close
+        const speechCooldown = distNo < extremeR ? 1400 : 2200;
+        if (performance.now()-speechTimer > speechCooldown) {
+          noSpeech.textContent = phrases[Math.floor(Math.random()*phrases.length)];
+          noSpeech.classList.add('show'); speechTimer = performance.now();
+          setTimeout(()=>noSpeech.classList.remove('show'), 1400);
+          if (distNo < extremeR) {
+            nearMisses++; missCountEl.textContent=nearMisses; catchCounter.classList.add('show');
+          }
+        }
+
         if (distNo < extremeR) {
           noCarrier.classList.add('extreme-panic'); noCarrier.classList.remove('running');
           velX += (Math.random()-.5)*9; velY += (Math.random()-.5)*7;
           cursorGlow.style.width='48px'; cursorGlow.style.height='48px';
-          if (performance.now()-speechTimer > 1500) {
-            noSpeech.textContent = phrases[Math.floor(Math.random()*phrases.length)];
-            noSpeech.classList.add('show'); speechTimer = performance.now();
-            setTimeout(()=>noSpeech.classList.remove('show'),1300);
-            nearMisses++; missCountEl.textContent=nearMisses; catchCounter.classList.add('show');
-          }
         } else {
           noCarrier.classList.add('running'); noCarrier.classList.remove('extreme-panic');
           cursorGlow.style.width='36px'; cursorGlow.style.height='36px';
@@ -841,7 +846,7 @@
         noCarrier.classList.remove('running','extreme-panic');
         velX += (baseX-carrierX)*.045; velY += (baseY-carrierY)*.045;
         cursorGlow.style.width='28px'; cursorGlow.style.height='28px';
-        if (distNo>290) {
+        if (distNo>420) {
           noMouth.setAttribute('d','M 74 108 Q 80 107 86 108');
           noTears.setAttribute('opacity','0'); noSpeech.classList.remove('show');
         }
