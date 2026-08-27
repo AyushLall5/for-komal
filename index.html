@@ -181,7 +181,6 @@
       transition: opacity 1.1s ease;
     }
 
-    /* Dramatically increased bg size to allow extreme twist/twirl parallax without showing edges */
     .journey-bg {
       position: fixed;
       top: -50vh; left: -50vw;
@@ -189,15 +188,10 @@
       z-index: 0;
       pointer-events: none;
       will-change: transform;
-      background:
-        radial-gradient(ellipse 70% 50% at 20% 30%, rgba(224,90,71,0.2) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 60%, rgba(255,209,102,0.15) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 50% at 50% 80%, rgba(26,115,232,0.1) 0%, transparent 60%),
-        linear-gradient(165deg, #161210 0%, #2C221C 45%, #120e0c 100%);
+      background: linear-gradient(165deg, #161210 0%, #2C221C 45%, #120e0c 100%);
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* Abstract shapes mapped for deep parallax */
     .abstract-vectors {
       position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.6;
     }
@@ -205,13 +199,16 @@
     .blob {
       position: absolute;
       border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.55;
-      will-change: transform;
+      filter: blur(110px);
+      opacity: 0.7; /* Increased opacity so themes are vivid */
+      will-change: transform, background-color;
+      transition: background-color 1.2s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .blob-1 { width: 50vw; height: 50vw; background: #E05A47; top: 10%; left: 15%; }
-    .blob-2 { width: 45vw; height: 45vw; background: #FFD166; top: 40%; right: 10%; }
-    .blob-3 { width: 40vw; height: 40vw; background: #118AB2; bottom: 15%; left: 25%; }
+    
+    /* Default hero colors, will be driven by JS themes */
+    .blob-1 { width: 50vw; height: 50vw; background-color: #E05A47; top: 10%; left: 15%; }
+    .blob-2 { width: 45vw; height: 45vw; background-color: #FFD166; top: 40%; right: 10%; }
+    .blob-3 { width: 40vw; height: 40vw; background-color: #118AB2; bottom: 15%; left: 25%; }
 
     .geo {
       position: absolute;
@@ -314,12 +311,11 @@
                   box-shadow 0.45s, border-color 0.3s;
     }
     .stop-card:hover {
-      transform: translateY(-12px) scale(1.025);
       box-shadow: 0 40px 90px rgba(0,0,0,0.5);
       border-color: rgba(255,255,255,0.18);
     }
     .stop-card.expanded {
-      transform: translateY(-14px) scale(1.035);
+      transform: translateY(-14px) scale(1.035) !important;
       border-color: rgba(224,90,71,0.45);
     }
     .stop-card::before {
@@ -355,15 +351,21 @@
     .stop-visual {
       width: 100%; height: 190px; border-radius: 18px; overflow: hidden;
       margin-bottom: 16px; position: relative;
+      perspective: 1000px; /* Required for the 3D twist */
     }
     .stop-visual img {
       width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.8s cubic-bezier(0.16,1,0.3,1);
-      filter: saturate(0.88) brightness(0.9);
+      /* JS handles the 3D transform, CSS handles the color pop on hover */
+      will-change: transform;
+      transform-style: preserve-3d;
+      filter: saturate(0.85) brightness(0.85);
+      transition: filter 0.4s ease;
     }
-    .stop-card:hover .stop-visual img { transform: scale(1.07); }
+    .stop-card:hover .stop-visual img {
+      filter: saturate(1.15) brightness(1.1);
+    }
     .stop-visual::after {
-      content: ''; position: absolute; inset: 0;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background: linear-gradient(180deg, transparent 35%, rgba(15,14,13,0.55) 100%);
     }
 
@@ -454,7 +456,7 @@
       .hint-pill { font-size: .75rem; padding: 6px 14px; }
       .stop-card { padding: 22px; }
       .stop-visual { height: 155px; }
-      .journey-bg { width: 300vw; height: 300vh; top:-100vh; left:-100vw;} /* more bleed on mobile */
+      .journey-bg { width: 300vw; height: 300vh; top:-100vh; left:-100vw;} 
     }
   </style>
 </head>
@@ -568,7 +570,8 @@
     </div>
 
     <div class="journey-content">
-      <div class="map-hero">
+      <!-- HERO (Default Theme: Sunburst/Metro) -->
+      <div class="map-hero theme-trigger" data-c1="#E05A47" data-c2="#FFD166" data-c3="#118AB2">
         <div class="metro-badge">🚇 Metro meet-up · No cars needed</div>
         <h1>Our little Delhi adventure</h1>
         <p>Scroll slowly. The day unfolds with you.</p>
@@ -580,7 +583,8 @@
         </div>
       </div>
 
-      <div class="stop">
+      <!-- STOP 1 (Theme: Warm, Earthy Terracotta) -->
+      <div class="stop theme-trigger" data-c1="#D96C4A" data-c2="#F2C14E" data-c3="#2A9D8F">
         <div class="stop-card">
           <div class="time-chip"><span class="dot"></span> 12:00 – 1:45 PM</div>
           <h2 class="stop-title">Café Lota</h2>
@@ -605,7 +609,8 @@
         <div class="transfer-line"></div>
       </div>
 
-      <div class="stop">
+      <!-- STOP 2 (Theme: Serene Navy Blues & Soft White) -->
+      <div class="stop theme-trigger" data-c1="#1A365D" data-c2="#4299E1" data-c3="#EDF2F7">
         <div class="stop-card">
           <div class="time-chip"><span class="dot"></span> 2:15 – 3:30 PM</div>
           <h2 class="stop-title">Navy Children School</h2>
@@ -630,7 +635,8 @@
         <div class="transfer-line"></div>
       </div>
 
-      <div class="stop">
+      <!-- STOP 3 (Theme: Vibrant Golden Hour Greens) -->
+      <div class="stop theme-trigger" data-c1="#386641" data-c2="#F2E8CF" data-c3="#BC4749">
         <div class="stop-card">
           <div class="time-chip"><span class="dot"></span> 4:00 – 5:30 PM</div>
           <h2 class="stop-title">Sunder Nursery</h2>
@@ -655,7 +661,8 @@
         <div class="transfer-line"></div>
       </div>
 
-      <div class="stop">
+      <!-- STOP 4 (Theme: Indigo, Saffron & Brick) -->
+      <div class="stop theme-trigger" data-c1="#264653" data-c2="#E9C46A" data-c3="#E76F51">
         <div class="stop-card">
           <div class="time-chip"><span class="dot"></span> 6:00 – 7:20 PM</div>
           <h2 class="stop-title">National Crafts Village</h2>
@@ -680,7 +687,8 @@
         <div class="transfer-line"></div>
       </div>
 
-      <div class="stop">
+      <!-- STOP 5 (Theme: Romantic Evening / Violet & Deep Pink) -->
+      <div class="stop theme-trigger" data-c1="#3A0CA3" data-c2="#F72585" data-c3="#4CC9F0">
         <div class="stop-card">
           <div class="time-chip"><span class="dot"></span> 7:45 – 9:00 PM</div>
           <h2 class="stop-title">Dinner · Grammar Room / Olive</h2>
@@ -699,7 +707,8 @@
         </div>
       </div>
 
-      <div class="finale" id="final-card">
+      <!-- FINALE (Theme: Glowing Gold & Starlight) -->
+      <div class="finale theme-trigger" id="final-card" data-c1="#FFD166" data-c2="#FFB703" data-c3="#FB8500">
         <div class="sparkles">✨</div>
         <h3>Ready when you are</h3>
         <p>I’ll sort the metro route, playlists, and reservations. You just show up — that’s the only thing that matters.</p>
@@ -745,9 +754,10 @@
     const bunnyEarL = document.getElementById('bunny-ear-l');
     const bunnyEarR = document.getElementById('bunny-ear-r');
 
-    // Smooth Scroll variables
+    // Smooth Scroll & Dynamic Theme Array
     let scrollTarget = 0;
     let scrollCurrent = 0;
+    let themeTriggers = []; // Cached array for performance
 
     function resize() {
       canvas.width = starCanvas.width = innerWidth;
@@ -874,7 +884,6 @@
         const cx = cRect.left+cRect.width/2, cy = cRect.top+cRect.height/2;
         const distNo = getDist(mouseX,mouseY,cx,cy);
         
-        /* UPDATED: Significantly increased detection range so it flees earlier */
         const panicR=380, extremeR=160;
 
         if (distNo < panicR) {
@@ -904,7 +913,6 @@
           noCarrier.classList.remove('running','extreme-panic');
           velX += (baseX-carrierX)*.045; velY += (baseY-carrierY)*.045;
           cursorGlow.style.width='28px'; cursorGlow.style.height='28px';
-          /* UPDATED: Only reset expression when very far away */
           if (distNo>420) {
             noMouth.setAttribute('d','M 74 108 Q 80 107 86 108');
             noTears.setAttribute('opacity','0'); noSpeech.classList.remove('show');
@@ -945,34 +953,74 @@
         }
       }
 
-      /* UPDATED: Smooth scroll dynamic lerping for Map Scene Parallax */
+      /* =========================================================
+         UPDATED: Dynamic 3D Parallax & Theme Injection
+         ========================================================= */
       if (mapScene.style.display !== 'none') {
-        // Interpolate current scroll towards target scroll for butter-smooth effect
+        
         scrollCurrent += (scrollTarget - scrollCurrent) * 0.06;
         
         const maxScroll = Math.max(1, document.documentElement.scrollHeight - innerHeight);
         const p = maxScroll > 0 ? scrollCurrent / maxScroll : 0;
-
         progressFill.style.width = (p * 100) + '%';
 
-        // 1. Extreme background container twist & twirl
-        const bgRot = p * 45; // Twists a full 45 degrees over the scroll
-        const bgScale = 1 + Math.sin(p * Math.PI) * 0.15; // Breathes out then in
+        // Background physical twist
+        const bgRot = p * 45; 
+        const bgScale = 1 + Math.sin(p * Math.PI) * 0.15; 
         journeyBg.style.transform = `translate3d(0, ${p * -60}px, 0) rotate(${bgRot}deg) scale(${bgScale})`;
 
-        // 2. Individual floating blobs drifting on different axes
         blob1.style.transform = `translate3d(${p * innerWidth * 0.4}px, ${p * innerHeight * -0.5}px, 0) scale(${1 + p * 0.7}) rotate(${p * 90}deg)`;
         blob2.style.transform = `translate3d(${p * innerWidth * -0.3}px, ${p * innerHeight * 0.4}px, 0) scale(${1.2 - p * 0.4}) rotate(${-p * 140}deg)`;
         blob3.style.transform = `translate3d(${Math.sin(p * Math.PI) * innerWidth * 0.3}px, ${p * innerHeight * -0.3}px, 0) rotate(${p * 70}deg)`;
 
-        // 3. Crisp geometric elements countering the twist
         geoRing.style.transform = `translate3d(${p * innerWidth * -0.15}px, ${p * innerHeight * 0.5}px, 0) rotate(${p * 200}deg) scale(${1 + p * 0.4})`;
         geoSquare.style.transform = `translate3d(${p * innerWidth * 0.2}px, ${p * innerHeight * -0.4}px, 0) rotate(${22 + p * 150}deg)`;
+
+        // Image 3D Pop & Theme Calculation
+        if (themeTriggers.length) {
+          let minCenterDist = Infinity;
+          let activeTrigger = null;
+          const viewCenter = innerHeight / 2;
+
+          for (const item of themeTriggers) {
+            const rect = item.el.getBoundingClientRect();
+            // Distance from exactly the middle of the screen
+            const centerDist = (rect.top + rect.height / 2) - viewCenter;
+            
+            // Find which card is currently taking over the screen
+            if (Math.abs(centerDist) < minCenterDist) {
+              minCenterDist = Math.abs(centerDist);
+              activeTrigger = item;
+            }
+
+            // Apply 3D Twist/Pop to the image based on its scroll position
+            if (item.img) {
+              const normalizedDist = centerDist / viewCenter; // 0 at center, 1 at bottom, -1 at top
+              const clamped = Math.max(-1.5, Math.min(1.5, normalizedDist));
+              
+              // Math: At center (0) = 1.15 scale (Pop), 0 rot (Flat)
+              //       At edges (1) = 1.0 scale, 22deg rot (Twisted)
+              const scale = 1.15 - Math.abs(clamped) * 0.15;
+              const rotX = clamped * 22; 
+              const rotY = clamped * -6; 
+              
+              item.img.style.transform = `scale(${scale}) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+            }
+          }
+
+          // If the closest element changed, blend the background into its theme
+          if (activeTrigger && activeTrigger !== window._currentTheme) {
+            window._currentTheme = activeTrigger;
+            blob1.style.backgroundColor = activeTrigger.c1;
+            blob2.style.backgroundColor = activeTrigger.c2;
+            blob3.style.backgroundColor = activeTrigger.c3;
+          }
+        }
       }
 
       requestAnimationFrame(loop);
     }
-    loop(); // Kick off the universal requestAnimationFrame loop
+    loop(); 
 
     function blink() {
       if (proposalScene.style.display === 'none') return;
@@ -1065,12 +1113,21 @@
         document.querySelectorAll('.float-heart').forEach(h=>h.remove());
         document.body.style.background = '#0F0E0D';
         
-        // Ensure scroll targets are reset upon entry
         scrollTarget = window.scrollY;
         scrollCurrent = window.scrollY;
 
         setTimeout(()=>{
           mapScene.style.opacity='1';
+          
+          // Cache the theme triggers for the parallax engine to prevent layout thrashing
+          themeTriggers = Array.from(document.querySelectorAll('.theme-trigger')).map(el => ({
+            el,
+            img: el.querySelector('.stop-visual img'),
+            c1: el.dataset.c1,
+            c2: el.dataset.c2,
+            c3: el.dataset.c3
+          }));
+
           document.querySelectorAll('.stop').forEach(s=>observer.observe(s));
           document.querySelectorAll('.transfer').forEach(t=>transferObs.observe(t));
         },50);
