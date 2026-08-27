@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Special Question for Komal ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-cream: #FFF9F4;
+      --pink-soft: #FFD1DC;
+      --pink-deep: #FF6B8B;
+      --text-dark: #3F3356;
+      --lavender: #E8E0F0;
+      --mint: #D4EDDA;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      font-family: 'Nunito', sans-serif;
+      color: var(--text-dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* --- SCENE 1: THE PROPOSAL --- */
+    #proposal-scene {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 30%, #FFF5F7 0%, #FEE8EC 100%);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      z-index: 10;
+    }
+
+    .proposal-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--pink-deep);
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.3;
+      text-shadow: 2px 4px 10px rgba(255, 107, 139, 0.2);
+    }
+
+    .proposal-title span {
+      display: block;
+      font-size: 1.1rem;
+      font-family: 'Nunito', sans-serif;
+      color: #7A6F8A;
+      margin-top: 8px;
+    }
+
+    .stage-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: clamp(20px, 8vw, 90px);
+      position: relative;
+    }
+
+    .interactive-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* SVG Character Styling */
+    .character-svg {
+      width: 140px;
+      height: 140px;
+      overflow: visible;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Button Styles */
+    .btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      padding: 14px 44px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transition: all 0.25s ease;
+      margin-top: 10px;
+      position: relative;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #FF6B8B, #FF8E53);
+      color: white;
+      box-shadow: 0 10px 25px rgba(255, 107, 139, 0.4);
+    }
+
+    .btn-no {
+      background: #E0DBEC;
+      color: #6D6380;
+      pointer-events: auto;
+    }
+
+    /* Block user clicks on No */
+    .btn-no.blocked {
+      pointer-events: none;
+      filter: grayscale(0.2);
+    }
+
+    /* Floating Clouds / Background decor */
+    .decor-cloud {
+      position: absolute;
+      background: white;
+      border-radius: 50px;
+      opacity: 0.6;
+      animation: floatCloud 14s infinite alternate ease-in-out;
+    }
+
+    @keyframes floatCloud {
+      0% { transform: translateX(0px); }
+      100% { transform: translateX(40px); }
+    }
+
+    /* --- SCENE 2: DREAMY DELHI MAP --- */
+    #map-scene {
+      display: none;
+      opacity: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #FBF8FF 0%, #FFF3F6 100%);
+      transition: opacity 1s ease;
+      padding: 40px 20px 80px 20px;
+    }
+
+    .header-section {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 30px auto;
+    }
+
+    .header-section h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      color: var(--pink-deep);
+    }
+
+    .header-section p {
+      font-size: 1.1rem;
+      color: #6C5C7F;
+      margin-top: 6px;
+    }
+
+    .map-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border-radius: 36px;
+      box-shadow: 0 20px 60px rgba(175, 140, 190, 0.15);
+      border: 4px solid #FFF0F4;
+      padding: 30px;
+      position: relative;
+    }
+
+    .delhi-svg-map {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.03));
+    }
+
+    /* Itinerary Detail Cards */
+    .itinerary-grid {
+      max-width: 900px;
+      margin: 40px auto 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .itinerary-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .itinerary-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--pink-soft);
+      box-shadow: 0 12px 30px rgba(255, 107, 139, 0.15);
+    }
+
+    .itinerary-card .time {
+      font-weight: 900;
+      font-size: 0.85rem;
+      color: var(--pink-deep);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .itinerary-card .title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      margin: 6px 0;
+      color: var(--text-dark);
+    }
+
+    .itinerary-card .desc {
+      font-size: 0.9rem;
+      color: #6C5C7F;
+      line-height: 1.4;
+    }
+
+    /* Heart / Confetti Canvas */
+    #celebration-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* Path Animation */
+    .dreamy-path {
+      stroke-dasharray: 10;
+      animation: dashMove 25s linear infinite;
+    }
+
+    @keyframes dashMove {
+      from { stroke-dashoffset: 500; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    .pin-group {
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .pin-group:hover {
+      transform: scale(1.15);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Particle Canvas -->
+  <canvas id="celebration-canvas"></canvas>
+
+  <!-- SCENE 1: PROPOSAL STAGE -->
+  <main id="proposal-scene">
+    <div class="decor-cloud" style="width: 140px; height: 40px; top: 15%; left: 10%;"></div>
+    <div class="decor-cloud" style="width: 180px; height: 50px; top: 22%; right: 12%; animation-duration: 20s;"></div>
+
+    <h1 class="proposal-title">
+      Komal, will you go on a date with me? 🌸
+      <span>(Choose carefully... someone is watching your pointer! 👀)</span>
+    </h1>
+
+    <div class="stage-container">
+      
+      <!-- YES CHARACTER: BUNNY -->
+      <div class="interactive-card" id="yes-wrapper">
+        <svg id="yes-char" class="character-svg" viewBox="0 0 160 160">
+          <g id="bunny-body">
+            <!-- Ears -->
+            <ellipse cx="60" cy="40" rx="14" ry="34" fill="#FFFFFF" stroke="#3F3356" stroke-width="4"/>
+            <ellipse cx="60" cy="42" rx="7" ry="22" fill="#FFCCD8"/>
+            <ellipse cx="100" cy="40" rx="14" ry="34" fill="#FFFFFF" stroke="#3F3356" stroke-width="4"/>
+            <ellipse cx="100" cy="42" rx="7" ry="22" fill="#FFCCD8"/>
+            
+            <!-- Head & Cheeks -->
+            <circle cx="80" cy="95" r="48" fill="#FFFFFF" stroke="#3F3356" stroke-width="4"/>
+            <circle id="yes-blush-left" cx="54" cy="105" r="10" fill="#FF6B8B" opacity="0.1"/>
+            <circle id="yes-blush-right" cx="106" cy="105" r="10" fill="#FF6B8B" opacity="0.1"/>
+            
+            <!-- Eyes -->
+            <ellipse id="yes-eye-left" cx="62" cy="90" rx="5" ry="6" fill="#3F3356"/>
+            <ellipse id="yes-eye-right" cx="98" cy="90" rx="5" ry="6" fill="#3F3356"/>
+            <circle cx="64" cy="88" r="2" fill="#FFFFFF"/>
+            <circle cx="100" cy="88" r="2" fill="#FFFFFF"/>
+
+            <!-- Cute Mouth -->
+            <path id="yes-mouth" d="M 74 98 Q 80 102 86 98" fill="none" stroke="#3F3356" stroke-width="3" stroke-linecap="round"/>
+            
+            <!-- Paws -->
+            <ellipse cx="50" cy="135" rx="12" ry="9" fill="#FFFFFF" stroke="#3F3356" stroke-width="4"/>
+            <ellipse cx="110" cy="135" rx="12" ry="9" fill="#FFFFFF" stroke="#3F3356" stroke-width="4"/>
+          </g>
+        </svg>
+        <button id="btn-yes" class="btn btn-yes">YES! 🥰</button>
+      </div>
+
+      <!-- NO CHARACTER: BEAR -->
+      <div class="interactive-card" id="no-wrapper">
+        <svg id="no-char" class="character-svg" viewBox="0 0 160 160">
+          <g id="bear-body">
+            <!-- Ears -->
+            <circle cx="48" cy="55" r="16" fill="#D7C3B3" stroke="#3F3356" stroke-width="4"/>
+            <circle cx="48" cy="55" r="8" fill="#F8E5D8"/>
+            <circle cx="112" cy="55" r="16" fill="#D7C3B3" stroke="#3F3356" stroke-width="4"/>
+            <circle cx="112" cy="55" r="8" fill="#F8E5D8"/>
+
+            <!-- Head -->
+            <circle cx="80" cy="95" r="48" fill="#D7C3B3" stroke="#3F3356" stroke-width="4"/>
+            
+            <!-- Snout -->
+            <ellipse cx="80" cy="102" rx="20" ry="14" fill="#F8E5D8"/>
+            <ellipse cx="80" cy="96" rx="6" ry="4" fill="#3F3356"/>
+
+            <!-- Eyes -->
+            <ellipse id="no-eye-left" cx="62" cy="86" rx="5" ry="6" fill="#3F3356"/>
+            <ellipse id="no-eye-right" cx="98" cy="86" rx="5" ry="6" fill="#3F3356"/>
+            
+            <!-- Sad Mouth (Dynamic Path) -->
+            <path id="no-mouth" d="M 74 107 Q 80 106 86 107" fill="none" stroke="#3F3356" stroke-width="3.5" stroke-linecap="round"/>
+
+            <!-- Tears (Hidden by default) -->
+            <g id="no-tears" opacity="0">
+              <path d="M 58 96 Q 54 106 58 112 Q 62 106 58 96" fill="#64B5F6"/>
+              <path d="M 102 96 Q 98 106 102 112 Q 106 106 102 96" fill="#64B5F6"/>
+            </g>
+
+            <!-- Defensive Shield Paws (Hidden until hover) -->
+            <g id="bear-shield-paws" opacity="0">
+              <ellipse cx="65" cy="135" rx="14" ry="10" fill="#D7C3B3" stroke="#3F3356" stroke-width="3"/>
+              <ellipse cx="95" cy="135" rx="14" ry="10" fill="#D7C3B3" stroke="#3F3356" stroke-width="3"/>
+            </g>
+          </g>
+        </svg>
+        <button id="btn-no" class="btn btn-no">No 🥺</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- SCENE 2: DREAMY DELHI ITINERARY -->
+  <section id="map-scene">
+    <div class="header-section">
+      <h1>Yaaay! It’s a Date! 🎉</h1>
+      <p>I crafted a special, dreamy day for us across Delhi. Here is our secret map & plan for the day:</p>
+    </div>
+
+    <!-- Map Container with Stylized Delhi Landmarks -->
+    <div class="map-container">
+      <svg class="delhi-svg-map" viewBox="0 0 800 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cloudGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FFF0F5" />
+            <stop offset="100%" stop-color="#E8F0FE" />
+          </linearGradient>
+        </defs>
+
+        <!-- Soft Landmass Background -->
+        <rect width="800" height="480" rx="24" fill="url(#cloudGrad)" opacity="0.6"/>
+        
+        <!-- Decorative River Yamuna (Dreamy pastel curve) -->
+        <path d="M 450 -20 C 470 120, 520 220, 500 340 C 490 400, 520 450, 540 500" stroke="#C8E6FE" stroke-width="28" stroke-linecap="round" fill="none" opacity="0.75"/>
+        <path d="M 450 -20 C 470 120, 520 220, 500 340 C 490 400, 520 450, 540 500" stroke="#E3F2FD" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.9"/>
+
+        <!-- Animated Route Trail -->
+        <path id="route-path" class="dreamy-path" d="M 410 120 C 370 180, 440 230, 400 270 C 320 330, 230 310, 210 390" stroke="#FF6B8B" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <!-- STOP 1: SUNDER NURSERY & BRUNCH (12:00 PM - 04:30 PM) -->
+        <g class="pin-group" transform="translate(410, 120)">
+          <!-- Monument / Pavilion Graphic -->
+          <rect x="-30" y="-45" width="60" height="35" rx="8" fill="#FFE5EC" stroke="#FF6B8B" stroke-width="2"/>
+          <path d="M -15 -45 Q 0 -65 15 -45" fill="#FF8E53" stroke="#FF6B8B" stroke-width="2"/>
+          <circle cx="-16" cy="-28" r="4" fill="#A8E6CF"/>
+          <circle cx="16" cy="-28" r="4" fill="#A8E6CF"/>
+          <!-- Pin -->
+          <circle cx="0" cy="0" r="16" fill="#FF6B8B" />
+          <circle cx="0" cy="0" r="7" fill="#FFFFFF" />
+          <text x="0" y="24" font-family="Fredoka One" font-size="12" fill="#3F3356" text-anchor="middle">1. Sunder Nursery</text>
+        </g>
+
+        <!-- STOP 2: NGMA / ART RETREAT (05:00 PM - 06:30 PM) -->
+        <g class="pin-group" transform="translate(400, 270)">
+          <!-- Gallery Frame Silhouette -->
+          <rect x="-24" y="-40" width="48" height="30" rx="5" fill="#FFF2D6" stroke="#FFAAA6" stroke-width="2"/>
+          <circle cx="-6" cy="-25" r="5" fill="#FF8B94"/>
+          <polygon points="6,-30 14,-16 -2,-16" fill="#A8E6CF"/>
+          <!-- Pin -->
+          <circle cx="0" cy="0" r="16" fill="#FFAAA6" />
+          <circle cx="0" cy="0" r="7" fill="#FFFFFF" />
+          <text x="0" y="24" font-family="Fredoka One" font-size="12" fill="#3F3356" text-anchor="middle">2. NGMA Cultural Walk</text>
+        </g>
+
+        <!-- STOP 3: MEHRAULI / OLIVE / CHAMPA GALI (07:00 PM - 09:00 PM) -->
+        <g class="pin-group" transform="translate(210, 390)">
+          <!-- Stylized Qutub Minar Silhouette -->
+          <polygon points="-10,-12 10,-12 5,-55 -5,-55" fill="#E8D7F1" stroke="#845EC2" stroke-width="2"/>
+          <line x1="-7" y1="-30" x2="7" y2="-30" stroke="#845EC2" stroke-width="2"/>
+          <!-- Pin -->
+          <circle cx="0" cy="0" r="16" fill="#845EC2" />
+          <circle cx="0" cy="0" r="7" fill="#FFFFFF" />
+          <text x="0" y="24" font-family="Fredoka One" font-size="12" fill="#3F3356" text-anchor="middle">3. Mehrauli Candlelight</text>
+        </g>
+
+        <!-- Cute Floating Doodles (Delhi elements) -->
+        <g transform="translate(180, 150) scale(0.7)">
+          <path d="M 0 0 Q 30 -20 60 0 Q 30 20 0 0" fill="#FFCCD8" opacity="0.5"/>
+          <text x="30" y="5" font-family="Nunito" font-size="10" fill="#FF6B8B" text-anchor="middle">🌸 Fragrant Gardens</text>
+        </g>
+
+        <g transform="translate(600, 330) scale(0.8)">
+          <circle cx="0" cy="0" r="12" fill="#FFEDB3"/>
+          <path d="M -5 5 L 0 -8 L 5 5 Z" fill="#FFAA00"/>
+          <text x="0" y="22" font-family="Nunito" font-size="11" fill="#845EC2" text-anchor="middle">✨ Fairy Lights</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Itinerary Structured Grid -->
+    <div class="itinerary-grid">
+      <div class="itinerary-card">
+        <span class="time">12:00 PM – 02:00 PM</span>
+        <h2 class="title">Brunch at Fabcafe</h2>
+        <p class="desc">Artisanal lunch overlooking lotus ponds & greenery inside Sunder Nursery. Easy conversations and iced coffee.</p>
+      </div>
+
+      <div class="itinerary-card">
+        <span class="time">02:15 PM – 04:30 PM</span>
+        <h2 class="title">Garden Walk & Photos</h2>
+        <p class="desc">Unrushed stroll through restored heritage pavilions, marble walkways, and shady flower beds.</p>
+      </div>
+
+      <div class="itinerary-card">
+        <span class="time">05:00 PM – 06:30 PM</span>
+        <h2 class="title">NGMA Art & Coffee</h2>
+        <p class="desc">A quiet, air-conditioned escape exploring modern Indian art, quiet hallways, and sculptures.</p>
+      </div>
+
+      <div class="itinerary-card">
+        <span class="time">07:00 PM – 09:00 PM</span>
+        <h2 class="title">Dinner at Olive Bar</h2>
+        <p class="desc">Candlelit dinner under the big banyan tree in Mehrauli with views of the illuminated Qutub Minar.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const btnYes = document.getElementById('btn-yes');
+    const btnNo = document.getElementById('btn-no');
+    const yesChar = document.getElementById('yes-char');
+    const noChar = document.getElementById('no-char');
+    const noMouth = document.getElementById('no-mouth');
+    const noTears = document.getElementById('no-tears');
+    const bearShieldPaws = document.getElementById('bear-shield-paws');
+    const blushL = document.getElementById('yes-blush-left');
+    const blushR = document.getElementById('yes-blush-right');
+    const proposalScene = document.getElementById('proposal-scene');
+    const mapScene = document.getElementById('map-scene');
+    const canvas = document.getElementById('celebration-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Resize canvas
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Distance Helper
+    function getDistance(x1, y1, x2, y2) {
+      return Math.hypot(x2 - x1, y2 - y1);
+    }
+
+    // Global Proximity Tracking
+    window.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      // 1. Check Proximity to NO Button
+      const noRect = btnNo.getBoundingClientRect();
+      const noCenterX = noRect.left + noRect.width / 2;
+      const noCenterY = noRect.top + noRect.height / 2;
+      const distNo = getDistance(mouseX, mouseY, noCenterX, noCenterY);
+
+      if (distNo < 200) {
+        // Interpolate Sadness (0 to 1)
+        const intensity = 1 - Math.max(0, (distNo - 50) / 150);
+        
+        // Morph mouth into a deep frown
+        const curve = 107 - (intensity * 14);
+        noMouth.setAttribute('d', `M 74 107 Q 80 ${curve} 86 107`);
+        
+        // Droop ears & head slightly
+        noChar.style.transform = `translateY(${intensity * 6}px) rotate(${intensity * -4}deg)`;
+
+        // Tears appear
+        noTears.setAttribute('opacity', Math.min(1, intensity * 1.4));
+
+        if (distNo < 75) {
+          // Shield the button completely
+          bearShieldPaws.setAttribute('opacity', '1');
+          btnNo.classList.add('blocked');
+          btnNo.style.transform = `scale(0.92) translateY(${intensity * 3}px)`;
+        } else {
+          bearShieldPaws.setAttribute('opacity', '0');
+          btnNo.classList.remove('blocked');
+        }
+      } else {
+        // Reset Bear
+        noMouth.setAttribute('d', `M 74 107 Q 80 106 86 107`);
+        noChar.style.transform = `translateY(0) rotate(0deg)`;
+        noTears.setAttribute('opacity', '0');
+        bearShieldPaws.setAttribute('opacity', '0');
+        btnNo.classList.remove('blocked');
+        btnNo.style.transform = `scale(1)`;
+      }
+
+      // 2. Check Proximity to YES Button
+      const yesRect = btnYes.getBoundingClientRect();
+      const yesCenterX = yesRect.left + yesRect.width / 2;
+      const yesCenterY = yesRect.top + yesRect.height / 2;
+      const distYes = getDistance(mouseX, mouseY, yesCenterX, yesCenterY);
+
+      if (distYes < 220) {
+        const joyIntensity = 1 - Math.max(0, (distYes - 40) / 180);
+        
+        // Bunny wiggles & pops up
+        yesChar.style.transform = `translateY(${-joyIntensity * 8}px) scale(${1 + joyIntensity * 0.08})`;
+        
+        // Cheeks blush brightly
+        blushL.setAttribute('opacity', 0.1 + joyIntensity * 0.85);
+        blushR.setAttribute('opacity', 0.1 + joyIntensity * 0.85);
+        
+        // Button grows invitingly
+        btnYes.style.transform = `scale(${1 + joyIntensity * 0.16})`;
+      } else {
+        yesChar.style.transform = `translateY(0) scale(1)`;
+        blushL.setAttribute('opacity', '0.1');
+        blushR.setAttribute('opacity', '0.1');
+        btnYes.style.transform = `scale(1)`;
+      }
+    });
+
+    // Particle Fireworks System
+    let particles = [];
+    const colors = ['#FF6B8B', '#FF8E53', '#FFAAA6', '#FFD3B6', '#845EC2', '#FFC75F'];
+
+    function createExplosion(x, y) {
+      for (let i = 0; i < 90; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 3;
+        particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 2,
+          size: Math.random() * 8 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.015 + 0.01,
+          isHeart: Math.random() > 0.4
+        });
+      }
+    }
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.15; // Gravity
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        
+        if (p.isHeart) {
+          // Draw mini heart
+          ctx.translate(p.x, p.y);
+          ctx.beginPath();
+          const s = p.size / 2;
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(-s, -s, -s * 2, s / 3, 0, s * 2);
+          ctx.bezierCurveTo(s * 2, s / 3, s, -s, 0, 0);
+          ctx.fill();
+        } else {
+          // Confetti circle
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      if (particles.length > 0) {
+        requestAnimationFrame(renderParticles);
+      }
+    }
+
+    // YES Button Click Transition
+    btnYes.addEventListener('click', (e) => {
+      const rect = btnYes.getBoundingClientRect();
+      createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      renderParticles();
+
+      // Fade out proposal scene
+      proposalScene.style.opacity = '0';
+      proposalScene.style.transform = 'scale(1.08)';
+
+      setTimeout(() => {
+        proposalScene.style.display = 'none';
+        mapScene.style.display = 'block';
+        
+        // Trigger smooth map fade in
+        setTimeout(() => {
+          mapScene.style.opacity = '1';
+        }, 50);
+
+        // Continuous celebration sparks
+        setInterval(() => {
+          if (Math.random() > 0.4) {
+            createExplosion(
+              window.innerWidth * (0.2 + Math.random() * 0.6),
+              window.innerHeight * (0.2 + Math.random() * 0.4)
+            );
+            renderParticles();
+          }
+        }, 1200);
+      }, 750);
+    });
+  </script>
+</body>
+</html>
+
+
